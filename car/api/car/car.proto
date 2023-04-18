@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package api.car;
+
+option go_package = "car/api/car;car";
+option java_multiple_files = true;
+option java_package = "api.car";
+
+service Car {
+	rpc CreateCar (CreateCarRequest) returns (CreateCarReply);
+	rpc UpdateCar (UpdateCarRequest) returns (UpdateCarReply);
+	rpc DeleteCar (DeleteCarRequest) returns (DeleteCarReply);
+	rpc GetCar (GetCarRequest) returns (GetCarReply);
+	rpc ListCar (ListCarRequest) returns (ListCarReply);
+}
+
+message CreateCarRequest {}
+message CreateCarReply {}
+
+message UpdateCarRequest {}
+message UpdateCarReply {}
+
+message DeleteCarRequest {}
+message DeleteCarReply {}
+
+message GetCarRequest {}
+message GetCarReply {}
+
+message ListCarRequest {}
+message ListCarReply {}
