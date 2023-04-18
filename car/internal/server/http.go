@@ -1,6 +1,7 @@
 package server
 
 import (
+	carv1 "car/api/car"
 	v1 "car/api/helloworld/v1"
 	"car/internal/conf"
 	"car/internal/service"
@@ -11,7 +12,7 @@ import (
 )
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, logger log.Logger) *http.Server {
+func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, car *service.CarService, logger log.Logger) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
@@ -28,5 +29,6 @@ func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, logger log.L
 	}
 	srv := http.NewServer(opts...)
 	v1.RegisterGreeterHTTPServer(srv, greeter)
+	carv1.RegisterCarHTTPServer(srv, car)
 	return srv
 }

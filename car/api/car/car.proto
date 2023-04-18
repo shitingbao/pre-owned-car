@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package api.car;
 
+import "google/api/annotations.proto";
+
 option go_package = "car/api/car;car";
 option java_multiple_files = true;
 option java_package = "api.car";
@@ -12,6 +14,21 @@ service Car {
 	rpc DeleteCar (DeleteCarRequest) returns (DeleteCarReply);
 	rpc GetCar (GetCarRequest) returns (GetCarReply);
 	rpc ListCar (ListCarRequest) returns (ListCarReply);
+	rpc SayHello (HelloRequest) returns (HelloReply) {
+		option (google.api.http) = {
+			get: "/car/helloworld/{name}"
+		};
+	}
+}
+
+// The request message containing the user's name.
+message HelloRequest {
+  string name = 1;
+}
+
+// The response message containing the greetings
+message HelloReply {
+  string message = 1;
 }
 
 message CreateCarRequest {}
