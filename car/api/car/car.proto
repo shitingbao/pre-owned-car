@@ -10,7 +10,12 @@ option java_multiple_files = true;
 option java_package = "api.car";
 
 service Car {
-	rpc CreateCar (CreateCarRequest) returns (CreateCarReply);
+	rpc CreateCar (CreateCarRequest) returns (CreateCarReply){
+		option (google.api.http)={
+			post:"/car"
+			body: "*"
+		};
+	};
 	rpc UpdateCar (UpdateCarRequest) returns (UpdateCarReply);
 	rpc DeleteCar (DeleteCarRequest) returns (DeleteCarReply);
 	rpc GetCar (GetCarRequest) returns (GetCarReply);
@@ -36,8 +41,13 @@ message HelloReply {
   string message = 1;
 }
 
-message CreateCarRequest {}
-message CreateCarReply {}
+message CreateCarRequest {
+	string car_name = 1;
+	string car_model = 2;
+}
+message CreateCarReply {
+	int64 car_id = 1 [json_name = "car_id"];
+}
 
 message UpdateCarRequest {}
 message UpdateCarReply {}

@@ -19,18 +19,40 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
+const OperationCarCreateCar = "/api.car.Car/CreateCar"
 const OperationCarListCar = "/api.car.Car/ListCar"
 const OperationCarSayHello = "/api.car.Car/SayHello"
 
 type CarHTTPServer interface {
+	CreateCar(context.Context, *CreateCarRequest) (*CreateCarReply, error)
 	ListCar(context.Context, *ListCarRequest) (*ListCarReply, error)
 	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
 }
 
 func RegisterCarHTTPServer(s *http.Server, srv CarHTTPServer) {
 	r := s.Route("/")
+	r.POST("/car", _Car_CreateCar0_HTTP_Handler(srv))
 	r.GET("/car/list", _Car_ListCar0_HTTP_Handler(srv))
 	r.GET("/car/helloworld/{name}", _Car_SayHello0_HTTP_Handler(srv))
+}
+
+func _Car_CreateCar0_HTTP_Handler(srv CarHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CreateCarRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationCarCreateCar)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CreateCar(ctx, req.(*CreateCarRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CreateCarReply)
+		return ctx.Result(200, reply)
+	}
 }
 
 func _Car_ListCar0_HTTP_Handler(srv CarHTTPServer) func(ctx http.Context) error {
@@ -75,6 +97,7 @@ func _Car_SayHello0_HTTP_Handler(srv CarHTTPServer) func(ctx http.Context) error
 }
 
 type CarHTTPClient interface {
+	CreateCar(ctx context.Context, req *CreateCarRequest, opts ...http.CallOption) (rsp *CreateCarReply, err error)
 	ListCar(ctx context.Context, req *ListCarRequest, opts ...http.CallOption) (rsp *ListCarReply, err error)
 	SayHello(ctx context.Context, req *HelloRequest, opts ...http.CallOption) (rsp *HelloReply, err error)
 }
@@ -85,6 +108,19 @@ type CarHTTPClientImpl struct {
 
 func NewCarHTTPClient(client *http.Client) CarHTTPClient {
 	return &CarHTTPClientImpl{client}
+}
+
+func (c *CarHTTPClientImpl) CreateCar(ctx context.Context, in *CreateCarRequest, opts ...http.CallOption) (*CreateCarReply, error) {
+	var out CreateCarReply
+	pattern := "/car"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationCarCreateCar))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
 }
 
 func (c *CarHTTPClientImpl) ListCar(ctx context.Context, in *ListCarRequest, opts ...http.CallOption) (*ListCarReply, error) {

@@ -18,7 +18,10 @@ func NewCarService() *CarService {
 }
 
 func (s *CarService) CreateCar(ctx context.Context, req *pb.CreateCarRequest) (*pb.CreateCarReply, error) {
-	return &pb.CreateCarReply{}, nil
+	log.Println("you create car:", req)
+	return &pb.CreateCarReply{
+		CarId: 123,
+	}, nil
 }
 
 func (s *CarService) UpdateCar(ctx context.Context, req *pb.UpdateCarRequest) (*pb.UpdateCarReply, error) {
