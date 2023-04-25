@@ -109,6 +109,9 @@ components:
                     type: string
                 carModel:
                     type: string
+                carPhoto:
+                    type: string
+                    format: bytes
         GoogleProtobufAny:
             type: object
             properties:
