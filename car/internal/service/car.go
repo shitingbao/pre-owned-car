@@ -2,8 +2,11 @@ package service
 
 import (
 	"context"
+	"log"
 
 	pb "car/api/car"
+
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type CarService struct {
@@ -31,7 +34,14 @@ func (s *CarService) GetCar(ctx context.Context, req *pb.GetCarRequest) (*pb.Get
 }
 
 func (s *CarService) ListCar(ctx context.Context, req *pb.ListCarRequest) (*pb.ListCarReply, error) {
-	return &pb.ListCarReply{}, nil
+	log.Println("you car:", req.CreateTime.AsTime())
+	return &pb.ListCarReply{
+		CarId:      1,
+		CarName:    "new car",
+		CreateTime: timestamppb.Now(),
+		CarModel:   []string{"aa", "bb"},
+		CarParam:   map[string]string{"cc": "dd"},
+	}, nil
 }
 
 func (s *CarService) SayHello(ctx context.Context, req *pb.HelloRequest) (*pb.HelloReply, error) {

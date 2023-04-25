@@ -3,6 +3,7 @@ syntax = "proto3";
 package api.car;
 
 import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
 
 option go_package = "car/api/car;car";
 option java_multiple_files = true;
@@ -13,7 +14,11 @@ service Car {
 	rpc UpdateCar (UpdateCarRequest) returns (UpdateCarReply);
 	rpc DeleteCar (DeleteCarRequest) returns (DeleteCarReply);
 	rpc GetCar (GetCarRequest) returns (GetCarReply);
-	rpc ListCar (ListCarRequest) returns (ListCarReply);
+	rpc ListCar (ListCarRequest) returns (ListCarReply){
+		option (google.api.http) = {
+			get: "/car/list"
+		};
+	};
 	rpc SayHello (HelloRequest) returns (HelloReply) {
 		option (google.api.http) = {
 			get: "/car/helloworld/{name}"
@@ -43,5 +48,16 @@ message DeleteCarReply {}
 message GetCarRequest {}
 message GetCarReply {}
 
-message ListCarRequest {}
-message ListCarReply {}
+message ListCarRequest {
+	int64 car_id = 1;
+	string car_name = 2;
+	google.protobuf.Timestamp  create_time = 3;
+}
+
+message ListCarReply {
+	int64 car_id = 1;
+	string car_name = 2;
+	google.protobuf.Timestamp  create_time = 3;
+	repeated string car_model = 4;
+	map<string,string> car_param = 5;
+}

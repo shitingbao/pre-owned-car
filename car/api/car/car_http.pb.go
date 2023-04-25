@@ -19,15 +19,37 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
+const OperationCarListCar = "/api.car.Car/ListCar"
 const OperationCarSayHello = "/api.car.Car/SayHello"
 
 type CarHTTPServer interface {
+	ListCar(context.Context, *ListCarRequest) (*ListCarReply, error)
 	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
 }
 
 func RegisterCarHTTPServer(s *http.Server, srv CarHTTPServer) {
 	r := s.Route("/")
+	r.GET("/car/list", _Car_ListCar0_HTTP_Handler(srv))
 	r.GET("/car/helloworld/{name}", _Car_SayHello0_HTTP_Handler(srv))
+}
+
+func _Car_ListCar0_HTTP_Handler(srv CarHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListCarRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationCarListCar)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListCar(ctx, req.(*ListCarRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListCarReply)
+		return ctx.Result(200, reply)
+	}
 }
 
 func _Car_SayHello0_HTTP_Handler(srv CarHTTPServer) func(ctx http.Context) error {
@@ -53,6 +75,7 @@ func _Car_SayHello0_HTTP_Handler(srv CarHTTPServer) func(ctx http.Context) error
 }
 
 type CarHTTPClient interface {
+	ListCar(ctx context.Context, req *ListCarRequest, opts ...http.CallOption) (rsp *ListCarReply, err error)
 	SayHello(ctx context.Context, req *HelloRequest, opts ...http.CallOption) (rsp *HelloReply, err error)
 }
 
@@ -62,6 +85,19 @@ type CarHTTPClientImpl struct {
 
 func NewCarHTTPClient(client *http.Client) CarHTTPClient {
 	return &CarHTTPClientImpl{client}
+}
+
+func (c *CarHTTPClientImpl) ListCar(ctx context.Context, in *ListCarRequest, opts ...http.CallOption) (*ListCarReply, error) {
+	var out ListCarReply
+	pattern := "/car/list"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationCarListCar))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
 }
 
 func (c *CarHTTPClientImpl) SayHello(ctx context.Context, in *HelloRequest, opts ...http.CallOption) (*HelloReply, error) {
