@@ -12,16 +12,26 @@ option java_package = "api.car";
 service Car {
 	rpc CreateCar (CreateCarRequest) returns (CreateCarReply){
 		option (google.api.http)={
-			post:"/car"
+			post:"/car/create"
 			body: "*"
 		};
 	};
-	rpc UpdateCar (UpdateCarRequest) returns (UpdateCarReply);
+	rpc UpdateCar (UpdateCarRequest) returns (UpdateCarReply){
+		option (google.api.http) = {
+			post:"/car/update"
+			body:"*"
+		};
+	};
 	rpc DeleteCar (DeleteCarRequest) returns (DeleteCarReply);
-	rpc GetCar (GetCarRequest) returns (GetCarReply);
+	rpc GetCar (GetCarRequest) returns (GetCarReply){
+		option (google.api.http) = {
+			get:"/car"
+		};
+	};
 	rpc ListCar (ListCarRequest) returns (ListCarReply){
 		option (google.api.http) = {
-			get: "/car/list"
+			post: "/car/list"
+			body:"*"
 		};
 	};
 	rpc SayHello (HelloRequest) returns (HelloReply) {
@@ -50,14 +60,27 @@ message CreateCarReply {
 	int64 car_id = 1 [json_name = "car_id"];
 }
 
-message UpdateCarRequest {}
-message UpdateCarReply {}
+message UpdateCarRequest {
+	int64 id = 1;
+	string name = 2;
+}
+message UpdateCarReply {
+	string name = 1;
+}
 
-message DeleteCarRequest {}
+message DeleteCarRequest {
+	int64 id = 1;
+}
 message DeleteCarReply {}
 
-message GetCarRequest {}
-message GetCarReply {}
+message GetCarRequest {
+	int64 id = 1;
+	int64 name = 2;
+}
+message GetCarReply {
+	int64 id = 1;
+	string name = 2;
+}
 
 message ListCarRequest {
 	int64 car_id = 1;
@@ -66,6 +89,10 @@ message ListCarRequest {
 }
 
 message ListCarReply {
+	repeated CarReply list = 1;
+}
+
+message CarReply {
 	int64 car_id = 1;
 	string car_name = 2;
 	google.protobuf.Timestamp  create_time = 3;
