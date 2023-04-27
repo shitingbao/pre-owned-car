@@ -20,6 +20,11 @@ func NewUploadRepo(logger glog.Logger) biz.UploadRepo {
 	}
 }
 
+// FormFile 表单文件
+// example post 127.0.0.1:8000/upload
+// form-data
+// keytype txt key name value test
+// keytype file key file value file
 func (r *uploadRepo) FormFile(ctx http.Context) error {
 	req := ctx.Request()
 
