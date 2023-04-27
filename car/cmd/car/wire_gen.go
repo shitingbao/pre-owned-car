@@ -35,7 +35,10 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 	carUsecase := biz.NewCarUsecase(carRepo, logger)
 	carService := service.NewCarService(carUsecase)
 	grpcServer := server.NewGRPCServer(confServer, greeterService, carService, logger)
-	httpServer := server.NewHTTPServer(confServer, greeterService, carService, logger)
+	uploadRepo := data.NewUploadRepo(logger)
+	uploadUsecase := biz.NewUploadUsecase(uploadRepo, logger)
+	uploadService := service.NewUploadService(uploadUsecase)
+	httpServer := server.NewHTTPServer(confServer, greeterService, carService, uploadService, logger)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()

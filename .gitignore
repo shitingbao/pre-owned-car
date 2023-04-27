@@ -15,3 +15,5 @@
 # vendor/
 
 car/cmd/car/car
+
+car/cmd/car/*.jpg

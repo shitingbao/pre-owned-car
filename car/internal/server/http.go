@@ -12,7 +12,7 @@ import (
 )
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, car *service.CarService, logger log.Logger) *http.Server {
+func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, car *service.CarService, up *service.UploadService, logger log.Logger) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
@@ -28,6 +28,9 @@ func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, car *service
 		opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
 	}
 	srv := http.NewServer(opts...)
+	route := srv.Route("/")
+	route.POST("/upload", up.FormFile)
+
 	v1.RegisterGreeterHTTPServer(srv, greeter)
 	carv1.RegisterCarHTTPServer(srv, car)
 	return srv
