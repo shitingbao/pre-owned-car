@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package api.car;
+
+import "errors/errors.proto";
+
+option go_package = "car/api/car;car";
+option objc_class_prefix = "APICarV1";
+
+
+// protoc --proto_path=. \
+//          --proto_path=../../third_party \       
+//          --go_out=paths=source_relative:. \
+//          --go-errors_out=paths=source_relative:. \
+//           error_reason.proto
+
+enum ErrorReason {
+  // Set default error code.
+  option (errors.default_code) = 500;
+
+  // Set the error code separately for an enumeration.
+  USER_NOT_FOUND = 0 [(errors.code) = 404];
+
+  CONTENT_MISSING = 1 [(errors.code) = 400];
+}
+
+
