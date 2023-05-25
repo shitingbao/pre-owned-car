@@ -5,6 +5,7 @@ import (
 	v1 "car/api/helloworld/v1"
 	"car/internal/conf"
 	"car/internal/service"
+	"context"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
@@ -15,7 +16,12 @@ import (
 func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, car *service.CarService, up *service.UploadService, logger log.Logger) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
-			recovery.Recovery(),
+			recovery.Recovery(
+				recovery.WithHandler(func(ctx context.Context, req, err interface{}) error {
+					// 异常退出逻辑
+					return nil
+				}),
+			),
 		),
 	}
 	if c.Http.Network != "" {
