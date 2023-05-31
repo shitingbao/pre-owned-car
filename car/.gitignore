@@ -36,3 +36,6 @@ bin/
 .vscode/
 .idea/
 *.swp
+
+cmd/car/car
+cmd/car/jpg
