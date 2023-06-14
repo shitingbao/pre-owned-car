@@ -20,6 +20,41 @@ paths:
                 - name: name
                   in: query
                   schema:
+                    type: string
+                - name: model
+                  in: query
+                  schema:
+                    type: string
+                - name: brand
+                  in: query
+                  schema:
+                    type: string
+                - name: emission
+                  in: query
+                  schema:
+                    type: string
+                - name: price
+                  in: query
+                  schema:
+                    type: number
+                    format: float
+                - name: years
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+                - name: mileage
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+                - name: color
+                  in: query
+                  schema:
+                    type: string
+                - name: gearbox
+                  in: query
+                  schema:
                     type: integer
                     format: int64
             responses:
@@ -133,6 +168,34 @@ paths:
                                 $ref: '#/components/schemas/Status'
 components:
     schemas:
+        CarModel:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                name:
+                    type: string
+                model:
+                    type: string
+                brand:
+                    type: string
+                emission:
+                    type: string
+                price:
+                    type: number
+                    format: float
+                years:
+                    type: integer
+                    format: int64
+                mileage:
+                    type: integer
+                    format: int64
+                color:
+                    type: string
+                gearbox:
+                    type: integer
+                    format: int64
         CarReply:
             type: object
             properties:
@@ -171,11 +234,10 @@ components:
         GetCarReply:
             type: object
             properties:
-                id:
-                    type: integer
-                    format: int64
-                name:
-                    type: string
+                cars:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/CarModel'
         GoogleProtobufAny:
             type: object
             properties:

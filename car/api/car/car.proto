@@ -71,15 +71,37 @@ message UpdateCarReply {
 message DeleteCarRequest {
 	int64 id = 1;
 }
+
 message DeleteCarReply {}
 
 message GetCarRequest {
 	int64 id = 1;
-	int64 name = 2;
+	string name = 2;
+	string model = 3;
+    string brand = 4;
+    string emission = 5;
+    float price = 6;
+    int64 years = 7;
+    int64 mileage = 8;
+    string color = 9;
+    int64 gearbox = 10;
 }
-message GetCarReply {
+
+message CarModel {
 	int64 id = 1;
 	string name = 2;
+	string model = 3;
+    string brand = 4;
+    string emission = 5;
+    float price = 6;
+    int64 years = 7;
+    int64 mileage = 8;
+    string color = 9;
+    int64 gearbox = 10;
+}
+
+message GetCarReply {
+	repeated CarModel cars = 1;
 }
 
 message ListCarRequest {

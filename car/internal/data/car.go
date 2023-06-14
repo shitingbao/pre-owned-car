@@ -1,10 +1,10 @@
 package data
 
 import (
+	api_car "car/api/car"
+	"car/internal/biz"
 	"context"
 	"log"
-
-	"car/internal/biz"
 
 	glog "github.com/go-kratos/kratos/v2/log"
 )
@@ -31,6 +31,16 @@ func (r *carRepo) Update(ctx context.Context, g *biz.Car) (*biz.Car, error) {
 	log.Println(g)
 	err := r.data.db.Table("car").Where("id = ?", g.ID).Updates(g).Error
 	return g, err
+}
+
+func (c *carRepo) Find(ctx context.Context, req *api_car.GetCarRequest) ([]*api_car.CarModel, error) {
+	res := []*api_car.CarModel{}
+	if err := c.data.db.Table("car").
+		Where(req).
+		Scan(&res).Error; err != nil {
+		return nil, err
+	}
+	return res, nil
 }
 
 func (r *carRepo) FindByID(ctx context.Context, id int64) (*biz.Car, error) {

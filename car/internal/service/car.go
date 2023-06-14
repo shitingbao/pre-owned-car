@@ -44,12 +44,12 @@ func (s *CarService) DeleteCar(ctx context.Context, req *api_car.DeleteCarReques
 }
 
 func (s *CarService) GetCar(ctx context.Context, req *api_car.GetCarRequest) (*api_car.GetCarReply, error) {
-	if req.Id == 0 {
-		return nil, api_car.ErrorUserNotFound("not id", "no this car")
-	}
-	c, err := s.car.FindByID(ctx, req.Id)
+	// if req.Id == 0 {
+	// 	return nil, api_car.ErrorUserNotFound("not id", "no this car")
+	// }
+	cars, err := s.car.Find(ctx, req)
 	return &api_car.GetCarReply{
-		Name: c.Name,
+		Cars: cars,
 	}, err
 }
 

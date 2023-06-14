@@ -1,6 +1,7 @@
 package biz
 
 import (
+	api_car "car/api/car"
 	"context"
 
 	"github.com/go-kratos/kratos/v2/log"
@@ -21,6 +22,7 @@ type CarRepo interface {
 	Save(context.Context, *Car) (*Car, error)
 	Update(context.Context, *Car) (*Car, error)
 	FindByID(context.Context, int64) (*Car, error)
+	Find(context.Context, *api_car.GetCarRequest) ([]*api_car.CarModel, error)
 	ListAll(context.Context) ([]*Car, error)
 }
 
@@ -47,6 +49,10 @@ func (uc *CarUsecase) Update(ctx context.Context, c *Car) (*Car, error) {
 
 func (uc *CarUsecase) FindByID(ctx context.Context, id int64) (*Car, error) {
 	return uc.repo.FindByID(ctx, id)
+}
+
+func (uc *CarUsecase) Find(ctx context.Context, req *api_car.GetCarRequest) ([]*api_car.CarModel, error) {
+	return uc.repo.Find(ctx, req)
 }
 
 func (uc *CarUsecase) ListAll(ctx context.Context) ([]*Car, error) {
