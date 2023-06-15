@@ -36,7 +36,7 @@ func (r *carRepo) Update(ctx context.Context, g *biz.Car) (*biz.Car, error) {
 func (c *carRepo) Find(ctx context.Context, req *api_car.GetCarRequest) ([]*api_car.CarModel, error) {
 	res := []*api_car.CarModel{}
 	if err := c.data.db.Table("car").
-		Where(req).
+		Find(req, "price between 1 and 200").
 		Scan(&res).Error; err != nil {
 		return nil, err
 	}
